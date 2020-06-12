@@ -6,7 +6,8 @@
 #ifndef NMEA_H_
 #define NMEA_H_
 
-struct GSA {
+struct GSA
+{
     short valid;
     int nSat;
     int fix;
@@ -15,12 +16,12 @@ struct GSA {
     float pdop;
 };
 
-struct RMC 
+struct RMC
 {
     short valid;
     float lat;
     float lon;
-    
+
     short y;
     short M;
     short d;
@@ -33,12 +34,14 @@ struct RMC
     float sog;
 };
 
-class NMEAUtils {
-    public:
-        static int parseRMC(const char* s_rmc, RMC &rmc);
-        static int parseGSA(const char* s_rmc, GSA &gsa);
-        static void dumpGSA(GSA &gsa, char* buffer);
-        static void dumpRMC(RMC &rmc, char* buffer);
+class NMEAUtils
+{
+public:
+    static int getDaysSince1970(int y, int m, int d);
+    static int parseRMC(const char *s_rmc, RMC &rmc);
+    static int parseGSA(const char *s_rmc, GSA &gsa);
+    static void dumpGSA(GSA &gsa, char *buffer);
+    static void dumpRMC(RMC &rmc, char *buffer);
 };
 
 #endif

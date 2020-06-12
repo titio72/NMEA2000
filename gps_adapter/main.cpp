@@ -37,7 +37,8 @@ time_t g_last_time_report = 0;
 RMC g_rmc;
 GSA g_gsa;
 
-void sendCOGSOG() {
+void sendCOGSOG()
+{
     if (g_gsa.valid && g_rmc.valid && g_gsa.fix >= 2 /*2=2dFix, 3=3dFix*/)
     {
         tN2kMsg N2kMsg;
@@ -51,7 +52,9 @@ void sendTime()
     if (g_gsa.valid && g_rmc.valid && g_gsa.fix >= 2 /*2=2dFix, 3=3dFix*/)
     {
         tN2kMsg N2kMsg;
-        SetN2kSystemTime(N2kMsg, 1, g_rmc.d + g_rmc.M * 100 + (g_rmc.y - 2000) * 10000, g_rmc.h * 10000 + g_rmc.m * 100 + g_rmc.s);
+        int days_since_1970 = NMEAUtils::getDaysSince1970(g_rmc.y, g_rmc.M, g_rmc.d);
+        double second_since_midnight = g_rmc.h * 60 * 60 + g_rmc.m * 60 + g_rmc.s + g_rmc.ms / 1000.0;
+        SetN2kSystemTime(N2kMsg, 1, days_since_1970, second_since_midnight);
         NMEA2000.SendMsg(N2kMsg);
     }
 }

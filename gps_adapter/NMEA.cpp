@@ -10,6 +10,22 @@
 #include <math.h>
 #include "NMEA.h"
 
+// To store number of days in all months from January to Dec.
+const int monthDays[12] = {31, 28, 31, 30, 31, 30,
+                           31, 31, 30, 31, 30, 31};
+
+int countLeapYears(int year, int month)
+{
+    // Check if the current year needs to be considered
+    // for the count of leap years or not
+    if (month <= 2)
+        year--;
+
+    // An year is a leap year if it is a multiple of 4,
+    // multiple of 400 and not a multiple of 100.
+    return year / 4 - year / 100 + year / 400;
+}
+
 int nmea_position_parse(char *s, float *pos)
 {
     char *cursor;
@@ -40,6 +56,28 @@ int nmea_position_parse(char *s, float *pos)
     *pos = degrees + (minutes / 60.0);
 
     return 0;
+}
+
+int NMEAUtils::getDaysSince1970(int y, int m, int d)
+{
+    // COUNT TOTAL NUMBER OF DAYS BEFORE FIRST DATE 'dt1'
+
+    // initialize count using years and day
+    long int n1 = 1970 * 365 + 1;
+
+    // Since every leap year is of 366 days,
+    // Add a day for every leap year
+    n1 += countLeapYears(1970, 1);
+
+    // SIMILARLY, COUNT TOTAL NUMBER OF DAYS BEFORE 'dt2'
+
+    long int n2 = y * 365 + d;
+    for (int i = 0; i < m - 1; i++)
+        n2 += monthDays[i];
+    n2 += countLeapYears(y, m);
+
+    // return difference between two counts
+    return (n2 - n1);
 }
 
 int NMEAUtils::parseGSA(const char *s_gsa, GSA &gsa)
