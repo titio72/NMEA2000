@@ -20,17 +20,16 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #  THE SOFTWARE.
 
-cmake_minimum_required(VERSION 3.0)
-project(NMEA2000)
-
-add_compile_options(
-  -Wall
-  -Werror
-  -std=c++11
-  -g
+add_executable(gps_adapter
+  main.cpp
 )
 
-add_subdirectory(src)
-add_subdirectory(third-party/catch)
-add_subdirectory(gps_adapter)
-add_subdirectory(test)
+add_library(privatelib STATIC
+  Ports.cpp
+  NMEA.cpp
+)
+
+target_link_libraries(gps_adapter
+  nmea2000
+  privatelib
+)
