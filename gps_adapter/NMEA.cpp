@@ -80,6 +80,16 @@ int NMEAUtils::getDaysSince1970(int y, int m, int d)
     return (n2 - n1);
 }
 
+bool NMEAUtils::is_sentence(const char* sentence, const char* sentence_id) {
+    static char id[4];
+    for (int i = 3; i < 6; i++) {
+        id[i - 3] = sentence[i];
+    }
+    id[3] = 0;
+
+    return (strcmp(id, sentence_id) == 0);
+}
+
 int NMEAUtils::parseGSA(const char *s_gsa, GSA &gsa)
 {
     char *tofree = strdup(s_gsa);
@@ -210,4 +220,20 @@ int NMEAUtils::parseRMC(const char *s_rmc, RMC &rmc)
     }
     free(tofree);
     return -1;
+}
+
+void test() {
+    RMC g_rmc;
+    //char rmc[] = "$GPRMC,201310.00,V,,,,,,,100620,,,N*79";
+    char x[] = "$GPRMC,181921.000,A,4357.555,N,00946.422,E,5.3,220.1,100620,000.0,W,A*18";
+    printf("%s\n", x);
+    NMEAUtils::parseRMC(x, g_rmc);
+    printf("[%d] %.4f %4f cog %.1f %.2f %d-%d-%dT%d:%d:%d.%d\n",g_rmc.valid,g_rmc.lat,g_rmc.lon,g_rmc.cog,g_rmc.sog,g_rmc.y,g_rmc.M,g_rmc.d,g_rmc.h,g_rmc.m,g_rmc.s,g_rmc.ms);
+    printf("%d %d\n", NMEAUtils::getDaysSince1970(g_rmc.y,g_rmc.M,g_rmc.d),g_rmc.h * 60 * 60 +g_rmc.m * 60 +g_rmc.s);
+
+    GSA g_gsa;
+    char y[] = "$GNGSA,A,3,80,71,73,79,69,,,,,,,,1.83,1.09,1.47*17";
+    printf("%s\n", y);
+    NMEAUtils::parseGSA(y, g_gsa);
+    printf("[%d] Fix %d NSat %d HDOP %.2f\n", g_gsa.valid, g_gsa.fix, g_gsa.nSat, g_gsa.hdop);
 }

@@ -29,6 +29,8 @@ add_library(privatelib STATIC
   NMEA.cpp
 )
 
+include_directories(../src)
+
 target_link_libraries(gps_adapter
   nmea2000
   privatelib

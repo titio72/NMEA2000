@@ -42,6 +42,7 @@ public:
     static int parseGSA(const char *s_rmc, GSA &gsa);
     static void dumpGSA(GSA &gsa, char *buffer);
     static void dumpRMC(RMC &rmc, char *buffer);
+    static bool is_sentence(const char* sentence, const char* sentence_id);
 };
 
 #endif
