@@ -31,6 +31,6 @@ add_compile_options(
 )
 
 add_subdirectory(src)
-add_subdirectory(third-party/catch)
+#add_subdirectory(third-party/catch)
 add_subdirectory(gps_adapter)
-add_subdirectory(test)
+#add_subdirectory(test)
